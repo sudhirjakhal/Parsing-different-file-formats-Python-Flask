@@ -11,9 +11,10 @@ def parse_files():
     if request.method == "POST":
         dtype = ''
         sample = ''
+        status = ''
         url = request.form.get("URL")
         r = requests.get(url)
-        r = requests.get(url)
+        status += str(r.status_code)
         if "text/html" in r.headers["content-type"]:    
             soup = BeautifulSoup(r.content, 'html.parser')
             dtype = type(soup.prettify())
@@ -32,9 +33,10 @@ def parse_files():
                 dtype = type(dic)
                 sample = dic
             except:
+                status += f"\nInvalid URL. Try again with correct link. Thank you !"
                 print('Not a json format')
 
-        return render_template('index.html', status=r.status_code, url=url, datatype=dtype, preview=sample)
+        return render_template('index.html', status=status, url=url, datatype=dtype, preview=sample)
     return render_template('index.html')
 
 if __name__ == '__main__':
